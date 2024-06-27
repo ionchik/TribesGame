@@ -8,9 +8,9 @@ namespace GamePhase.Professions
     {
         private List<TCard> _pickedCards = new();
 
-		public List<TCard> PickedCards => _pickedCards;
+	public List<TCard> PickedCards => _pickedCards;
 
-		public override Tuple<int, int> GetCounters()
+	public override Tuple<int, int> GetCounters()
         {
             return new Tuple<int, int>(base.GetCounters().Item1, _pickedCards.Count);
         }
