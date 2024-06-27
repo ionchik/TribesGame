@@ -27,7 +27,7 @@ public class Game : MonoBehaviour
     public event Action WinterStarted;
     public event Action<List<Tuple<Tribe, int>>> GameEnded;
 
-	private List<Player> _players;
+    private List<Player> _players;
     private Player _firstPlayer;
     private GameState _currentState;
     private Player _currentPlayer;
@@ -76,43 +76,43 @@ public class Game : MonoBehaviour
 
     private void CreatePlayers()
     {
-		PlayerInfoTransfer playersTransfer = FindAnyObjectByType<PlayerInfoTransfer>();
+	PlayerInfoTransfer playersTransfer = FindAnyObjectByType<PlayerInfoTransfer>();
         var playersInfo = playersTransfer.PlayersInfo;
-		_players = new List<Player>();
+	_players = new List<Player>();
         foreach (var (tribe, name) in playersInfo)
-		{
-			_players.Add(new Player(name, tribe, _playerViews[(int) tribe]));
-		}
-
-		_currentPlayerIndex = Random.Range(0, _players.Count);
-		_currentPlayer = _players[_currentPlayerIndex];
-        _firstPlayer = _currentPlayer;
-		TurnChanged?.Invoke(_currentPlayer);
-		Destroy(playersTransfer.gameObject);
+	{
+		_players.Add(new Player(name, tribe, _playerViews[(int) tribe]));
 	}
 
-	public int GetWorkersNumber(CardType targetType) 
+	_currentPlayerIndex = Random.Range(0, _players.Count);
+	_currentPlayer = _players[_currentPlayerIndex];
+        _firstPlayer = _currentPlayer;
+	TurnChanged?.Invoke(_currentPlayer);
+	Destroy(playersTransfer.gameObject);
+    }
+
+    public int GetWorkersNumber(CardType targetType) 
     {
         switch (targetType)
         {
             case CardType.Human:
-				int elders = _currentPlayer.GetCounters()[ProfessionType.Elder].Item1;
-				int warriors = _currentPlayer.GetCounters()[ProfessionType.Warrior].Item1;
+		int elders = _currentPlayer.GetCounters()[ProfessionType.Elder].Item1;
+		int warriors = _currentPlayer.GetCounters()[ProfessionType.Warrior].Item1;
                 return elders > warriors ? elders : warriors;
             case CardType.Totem:
             case CardType.Rite:
                 return _currentPlayer.GetCounters()[ProfessionType.Shaman].Item1;
-			case CardType.Meat:
-				return _currentPlayer.GetCounters()[ProfessionType.Hunter].Item1;
-			case CardType.Fish:
-				return _currentPlayer.GetCounters()[ProfessionType.Fisherman].Item1;
-			case CardType.Wheat:
-				return _currentPlayer.GetCounters()[ProfessionType.Farmer].Item1;
-		}
+	    case CardType.Meat:
+		return _currentPlayer.GetCounters()[ProfessionType.Hunter].Item1;
+	    case CardType.Fish:
+		return _currentPlayer.GetCounters()[ProfessionType.Fisherman].Item1;
+	    case CardType.Wheat:
+		return _currentPlayer.GetCounters()[ProfessionType.Farmer].Item1;
+	}
         return 0;
     }
 
-	private void OnCardsPicked(List<Card> cards)
+    private void OnCardsPicked(List<Card> cards)
     {
         StartCoroutine(TakeCard(cards));
     }
@@ -139,16 +139,16 @@ public class Game : MonoBehaviour
             case Human:
                 if(cards.Count > _currentPlayer.GetCounters()[ProfessionType.Elder].Item1)
                 {
-					_currentPlayer.TakeResources(cards);
-					break;
-				}
-				if (cards.Count > _currentPlayer.GetCounters()[ProfessionType.Warrior].Item1)
-				{
+			_currentPlayer.TakeResources(cards);
+			break;
+		}
+		if (cards.Count > _currentPlayer.GetCounters()[ProfessionType.Warrior].Item1)
+		{
                     yield return _humansBehaviour.ChooseProfessions();
-					_currentPlayer.AddWorkers(_humansBehaviour.GetWorkers());
-					break;
-				}
-				_humansBehaviour.StartChoosing(cards);
+		    _currentPlayer.AddWorkers(_humansBehaviour.GetWorkers());
+		    break;
+		}
+		_humansBehaviour.StartChoosing(cards);
                 yield return new WaitUntil(_humansBehaviour.IsChosen);
                 if(_humansBehaviour.IsKilling())
                 {
