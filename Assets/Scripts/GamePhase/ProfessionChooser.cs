@@ -17,8 +17,8 @@ public class ProfessionChooser : MonoBehaviour
     public void SetProfession(int professionType)
     {
         Profession = (ProfessionType) professionType;
-		_professionScreen.SetActive(false);
-		_isChosen = true;
+	_professionScreen.SetActive(false);
+	_isChosen = true;
     }
 
     public void StartChoosing(Card card)
